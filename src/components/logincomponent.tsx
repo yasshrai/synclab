@@ -12,8 +12,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Chrome } from "lucide-react";
 import Link from "next/link";
+import { useState, FormEvent } from "react";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onHandleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(email);
+    console.log(password);
+    setEmail("");
+    setPassword("");
+  };
   return (
     <Card className="mx-auto max-w-sm ">
       <CardHeader className="space-y-1">
@@ -23,7 +34,7 @@ export default function Login() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={onHandleSubmit}>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -31,11 +42,19 @@ export default function Login() {
               type="email"
               placeholder="m@example.com"
               required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
+            <Input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
           </div>
           <Link href="/signup">
             <Label className="cursor-pointer  hover:underline">
