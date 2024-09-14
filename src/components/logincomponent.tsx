@@ -38,7 +38,9 @@ export default function Login() {
             <Input id="password" type="password" required />
           </div>
           <Link href="/signup">
-            <Label>don&apos;t have an account ?</Label>
+            <Label className="cursor-pointer  hover:underline">
+              don&apos;t have an account?
+            </Label>
           </Link>
           <Button type="submit" className="w-full">
             Login

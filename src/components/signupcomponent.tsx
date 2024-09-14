@@ -49,7 +49,9 @@ export default function SignUp() {
             />
           </div>
           <Link href="/login">
-            <Label>already have an account ?</Label>
+            <Label className="cursor-pointer  hover:underline">
+              already have an account?
+            </Label>
           </Link>
           <Button type="submit" className="w-full">
             Sign Up
