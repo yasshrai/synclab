@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardHeader,
@@ -10,8 +12,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Chrome } from "lucide-react";
 import Link from "next/link";
+import { FormEvent, useState } from "react";
 
 export default function SignUp() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const onHandleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(email);
+    console.log(password);
+    console.log(confirmPassword);
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+  };
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
@@ -19,7 +35,7 @@ export default function SignUp() {
         <CardDescription>Create an account to get started</CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={onHandleSubmit}>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -28,6 +44,8 @@ export default function SignUp() {
               placeholder="m@example.com"
               required
               className="bg-background"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -37,6 +55,8 @@ export default function SignUp() {
               type="password"
               required
               className="bg-background"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -46,6 +66,8 @@ export default function SignUp() {
               type="password"
               required
               className="bg-background"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
             />
           </div>
           <Link href="/login">
