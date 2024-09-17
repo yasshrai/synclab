@@ -13,6 +13,10 @@ import { Button } from "@/components/ui/button";
 import { Chrome } from "lucide-react";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/app/firebase/config";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 type Inputs = {
   email: string;
@@ -21,17 +25,59 @@ type Inputs = {
 };
 
 export default function SignUp() {
+  const [createUserWithEmailAndPassword] =
+    useCreateUserWithEmailAndPassword(auth);
+  const router = useRouter();
+  const { toast } = useToast();
+
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
-    setValue("email", "");
-    setValue("password", "");
-    setValue("confirmPassword", "");
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      if (data.confirmPassword !== data.password) {
+        toast({
+          variant: "destructive",
+          title: "passwords do not match!",
+        });
+        return;
+      }
+
+      if (data.password.length < 7) {
+        toast({
+          variant: "destructive",
+          title: "password should be bigger than 7 characters",
+        });
+        return;
+      }
+      const regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]+$/;
+
+      if (!regex.test(data.password)) {
+        toast({
+          variant: "destructive",
+          title:
+            "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+        });
+        return;
+      }
+
+      const res = await createUserWithEmailAndPassword(
+        data.email,
+        data.password
+      );
+      console.log(res);
+
+      setValue("email", "");
+      setValue("password", "");
+      setValue("confirmPassword", "");
+      router.push("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

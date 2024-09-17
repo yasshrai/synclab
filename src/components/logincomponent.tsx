@@ -13,6 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Chrome } from "lucide-react";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/app/firebase/config";
+import { useRouter } from "next/navigation";
 
 type Inputs = {
   email: string;
@@ -20,16 +23,26 @@ type Inputs = {
 };
 
 export default function Login() {
+  const router = useRouter();
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
-    setValue("email", "");
-    setValue("password", "");
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      const res = await signInWithEmailAndPassword(data.email, data.password);
+      if (!res) {
+        return;
+      }
+      router.push("/");
+      setValue("email", "");
+      setValue("password", "");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
