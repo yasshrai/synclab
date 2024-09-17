@@ -12,19 +12,26 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Chrome } from "lucide-react";
 import Link from "next/link";
-import { useState, FormEvent } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type Inputs = {
+  email: string;
+  password: string;
+};
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onHandleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(email);
-    console.log(password);
-    setEmail("");
-    setPassword("");
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+    setValue("email", "");
+    setValue("password", "");
   };
+
   return (
     <Card className="mx-auto max-w-sm ">
       <CardHeader className="space-y-1">
@@ -34,7 +41,7 @@ export default function Login() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-4" onSubmit={onHandleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -42,9 +49,11 @@ export default function Login() {
               type="email"
               placeholder="m@example.com"
               required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              {...register("email", { required: true })}
             />
+            {errors.email && (
+              <span className=" text-sm text-red-800">email is required</span>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
@@ -52,9 +61,13 @@ export default function Login() {
               id="password"
               type="password"
               required
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              {...register("password", { required: true })}
             />
+            {errors.password && (
+              <span className=" text-sm text-red-800">
+                password is required
+              </span>
+            )}
           </div>
           <Link href="/signup">
             <Label className="cursor-pointer  hover:underline">
