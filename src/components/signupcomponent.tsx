@@ -70,7 +70,6 @@ export default function SignUp() {
         data.password
       );
       console.log(res);
-
       setValue("email", "");
       setValue("password", "");
       setValue("confirmPassword", "");
