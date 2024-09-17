@@ -16,6 +16,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 type Inputs = {
   email: string;
@@ -25,6 +27,8 @@ type Inputs = {
 export default function Login() {
   const router = useRouter();
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -64,18 +68,32 @@ export default function Login() {
               required
               {...register("email", { required: true })}
             />
+
             {errors.email && (
               <span className=" text-sm text-red-800">email is required</span>
             )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              required
-              {...register("password", { required: true })}
-            />
+            <div className=" flex flex-row min-w-fit relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                required
+                {...register("password", { required: true })}
+              />
+              {showPassword ? (
+                <EyeOff
+                  className=" absolute right-3 top-[7px] cursor-pointer size-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                ></EyeOff>
+              ) : (
+                <Eye
+                  className=" absolute right-3 top-[7px] cursor-pointer size-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                ></Eye>
+              )}
+            </div>
             {errors.password && (
               <span className=" text-sm text-red-800">
                 password is required
