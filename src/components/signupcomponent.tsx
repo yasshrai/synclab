@@ -17,6 +17,8 @@ import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 type Inputs = {
   email: string;
@@ -29,6 +31,7 @@ export default function SignUp() {
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
   const { toast } = useToast();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -103,13 +106,26 @@ export default function SignUp() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              required
-              className="bg-background"
-              {...register("password", { required: true })}
-            />
+            <div className=" flex flex-row min-w-fit relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                required
+                className="bg-background"
+                {...register("password", { required: true })}
+              />
+              {showPassword ? (
+                <EyeOff
+                  className=" absolute right-3 top-[7px] cursor-pointer size-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                ></EyeOff>
+              ) : (
+                <Eye
+                  className=" absolute right-3 top-[7px] cursor-pointer size-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                ></Eye>
+              )}
+            </div>
             {errors.password && (
               <span className=" text-sm text-red-800">
                 password is required
@@ -118,13 +134,26 @@ export default function SignUp() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input
-              id="confirm-password"
-              type="password"
-              required
-              className="bg-background"
-              {...register("confirmPassword", { required: true })}
-            />
+            <div className=" flex flex-row min-w-fit relative">
+              <Input
+                id="confirm-password"
+                type={showPassword ? "text" : "password"}
+                required
+                className="bg-background"
+                {...register("confirmPassword", { required: true })}
+              />
+              {showPassword ? (
+                <EyeOff
+                  className=" absolute right-3 top-[7px] cursor-pointer size-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                ></EyeOff>
+              ) : (
+                <Eye
+                  className=" absolute right-3 top-[7px] cursor-pointer size-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                ></Eye>
+              )}
+            </div>
             {errors.confirmPassword && (
               <span className=" text-sm text-red-800">
                 confirm password is required
