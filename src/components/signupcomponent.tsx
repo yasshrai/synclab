@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 type Inputs = {
   email: string;
@@ -39,6 +40,36 @@ export default function SignUp() {
     setValue,
     formState: { errors },
   } = useForm<Inputs>();
+  const googleProvider = new GoogleAuthProvider();
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result) {
+        toast({
+          variant: "default",
+          className: "text-white font-bold bg-green-700",
+          title: "Successfully signed in with Google",
+          duration: 4000,
+        });
+        sessionStorage.setItem("user", JSON.stringify(result));
+        router.push("/");
+      }
+    } catch (error: unknown) {
+      let message = "";
+      if (error instanceof Error) {
+        message = error.message;
+      } else {
+        message = "An unknown error occurred.";
+      }
+      toast({
+        variant: "destructive",
+        className: "text-white font-bold",
+        title: message,
+        duration: 4000,
+      });
+    }
+  };
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       if (data.confirmPassword !== data.password) {
@@ -178,7 +209,12 @@ export default function SignUp() {
               </span>
             </div>
           </div>
-          <Button type="button" variant="outline" className="w-full">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogleSignIn}
+          >
             <Chrome className="mr-2 h-4 w-4" />
             Sign up with Google
           </Button>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { auth } from "@/app/firebase/config";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -9,13 +10,33 @@ import { signOut } from "firebase/auth";
 export default function Home() {
   const [user] = useAuthState(auth);
   const router = useRouter();
-  if (!user) {
-    router.push("/login");
-  }
-  console.log(user);
+
+  useEffect(() => {
+    const userSession = sessionStorage.getItem("user");
+
+    if (!user && !userSession) {
+      router.push("/login");
+    }
+
+    if (user && !userSession) {
+      sessionStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user, router]);
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        sessionStorage.removeItem("user");
+        router.push("/login"); // Redirect to login after logout
+      })
+      .catch((error) => {
+        console.error("Error signing out: ", error);
+      });
+  };
+
   return (
-    <div className="dark:bg-zinc-950 bg-slate-200 min-h-screen">
-      <Button onClick={() => signOut(auth)}>log out</Button>
+    <div className="dark:bg-zinc-950 bg-slate-200 min-h-screen flex items-center justify-center">
+      <Button onClick={handleLogout}>Log out</Button>
     </div>
   );
 }

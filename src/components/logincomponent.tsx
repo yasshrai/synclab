@@ -10,14 +10,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Chrome } from "lucide-react";
+import { Chrome, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 type Inputs = {
   email: string;
@@ -27,25 +28,82 @@ type Inputs = {
 export default function Login() {
   const router = useRouter();
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<Inputs>();
+
+  // Google sign-in provider
+  const googleProvider = new GoogleAuthProvider();
+
+  // Handle regular login
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      const res = await signInWithEmailAndPassword(data.email, data.password);
-      if (!res) {
-        return;
+      const result = await signInWithEmailAndPassword(
+        data.email,
+        data.password
+      );
+      if (result) {
+        toast({
+          variant: "default",
+          className: "text-white font-bold bg-green-700",
+          title: "Successfully logged in",
+          duration: 4000,
+        });
+        sessionStorage.setItem("user", JSON.stringify(result));
+        router.push("/");
+      } else {
+        throw new Error(
+          "Something went wrong. Please check your email and password, or create a new account."
+        );
       }
-      router.push("/");
-      setValue("email", "");
-      setValue("password", "");
-    } catch (error) {
-      console.log(error);
+    } catch (error: unknown) {
+      let message = "";
+      if (error instanceof Error) {
+        message = error.message;
+      } else {
+        message = "An unknown error occurred.";
+      }
+      toast({
+        variant: "destructive",
+        className: "text-white font-bold",
+        title: message,
+        duration: 4000,
+      });
+    }
+  };
+
+  // Handle Google sign-in
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result) {
+        toast({
+          variant: "default",
+          className: "text-white font-bold bg-green-700",
+          title: "Successfully signed in with Google",
+          duration: 4000,
+        });
+        sessionStorage.setItem("user", JSON.stringify(result));
+        router.push("/");
+      }
+    } catch (error: unknown) {
+      let message = "";
+      if (error instanceof Error) {
+        message = error.message;
+      } else {
+        message = "An unknown error occurred.";
+      }
+      toast({
+        variant: "destructive",
+        className: "text-white font-bold",
+        title: message,
+        duration: 4000,
+      });
     }
   };
 
@@ -68,9 +126,8 @@ export default function Login() {
               required
               {...register("email", { required: true })}
             />
-
             {errors.email && (
-              <span className=" text-sm text-red-800">email is required</span>
+              <span className=" text-sm text-red-800">Email is required</span>
             )}
           </div>
           <div className="space-y-2">
@@ -86,23 +143,23 @@ export default function Login() {
                 <EyeOff
                   className=" absolute right-3 top-[7px] cursor-pointer size-5"
                   onClick={() => setShowPassword(!showPassword)}
-                ></EyeOff>
+                />
               ) : (
                 <Eye
                   className=" absolute right-3 top-[7px] cursor-pointer size-5"
                   onClick={() => setShowPassword(!showPassword)}
-                ></Eye>
+                />
               )}
             </div>
             {errors.password && (
               <span className=" text-sm text-red-800">
-                password is required
+                Password is required
               </span>
             )}
           </div>
           <Link href="/signup">
-            <Label className="cursor-pointer  hover:underline">
-              don&apos;t have an account?
+            <Label className="cursor-pointer hover:underline">
+              Don&apos;t have an account?
             </Label>
           </Link>
           <Button type="submit" className="w-full">
@@ -118,7 +175,12 @@ export default function Login() {
               </span>
             </div>
           </div>
-          <Button type="button" variant="outline" className="w-full">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogleSignIn}
+          >
             <Chrome className="mr-2 h-4 w-4" />
             Continue with Google
           </Button>
