@@ -52,7 +52,7 @@ export default function SignUp() {
           duration: 4000,
         });
         sessionStorage.setItem("user", JSON.stringify(result));
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch (error: unknown) {
       let message = "";
@@ -109,7 +109,18 @@ export default function SignUp() {
       setValue("confirmPassword", "");
       router.push("/login");
     } catch (error) {
-      console.log(error);
+      let message = "";
+      if (error instanceof Error) {
+        message = error.message;
+      } else {
+        message = "Something went wrong. Try again";
+      }
+      toast({
+        variant: "destructive",
+        className: "text-white font-bold",
+        duration: 4000,
+        title: message,
+      });
     }
   };
 

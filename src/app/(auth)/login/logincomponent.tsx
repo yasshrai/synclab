@@ -51,11 +51,11 @@ export default function Login() {
         toast({
           variant: "default",
           className: "text-white font-bold bg-green-700",
-          title: "Successfully logged in",
-          duration: 4000,
+          title: "Login Successfully",
+          duration: 2000,
         });
         sessionStorage.setItem("user", JSON.stringify(result));
-        router.push("/");
+        router.push("/dashboard");
       } else {
         throw new Error(
           "Something went wrong. Please check your email and password, or create a new account."
@@ -89,7 +89,7 @@ export default function Login() {
           duration: 4000,
         });
         sessionStorage.setItem("user", JSON.stringify(result));
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch (error: unknown) {
       let message = "";
