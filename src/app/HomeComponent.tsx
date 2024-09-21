@@ -14,7 +14,7 @@ import logo from "@/assets/logo.png";
 const HomeComponent = () => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-200 dark:bg-zinc-950">
-      <header className="w-full px-4 py-6 bg-slate-200 dark:bg-zinc-950">
+      <header className="w-full px-4 py-6 bg-slate-200 dark:bg-zinc-950 sticky top-0 ">
         <div className="container mx-auto flex items-center justify-between lg:justify-evenly">
           <Image
             src={logo}
@@ -50,7 +50,7 @@ const HomeComponent = () => {
               className="flex flex-col items-center justify-center space-y-8 text-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.5 }}
             >
               <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl text-slate-900 dark:text-slate-100">
                 Welcome to{" "}
