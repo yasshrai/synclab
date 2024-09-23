@@ -11,13 +11,13 @@ import { Button } from "@/components/ui/button";
 // This would typically come from a database or API
 const projects = [
   {
-    id: 1,
+    uid: 1,
     name: "Project Alpha",
     description: "A cutting-edge web application",
   },
-  { id: 2, name: "Project Beta", description: "Mobile app for productivity" },
+  { uid: 2, name: "Project Beta", description: "Mobile app for productivity" },
   {
-    id: 3,
+    uid: 3,
     name: "Project Gamma",
     description: "AI-powered data analysis tool",
   },
@@ -31,13 +31,13 @@ export default function Dashboard() {
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-7">
         {projects.map((project) => (
-          <Card key={project.id}>
+          <Card key={project.uid}>
             <CardHeader>
               <CardTitle>{project.name}</CardTitle>
               <CardDescription>{project.description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Link href={`/dashboard/project/${project.id}`}>
+              <Link href={`/dashboard/${project.uid}/${project.name}`}>
                 <Button variant="outline" className="w-full">
                   View Project
                 </Button>
