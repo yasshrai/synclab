@@ -51,18 +51,22 @@ export default function DashboardClient() {
             <AvatarFallback>{user?.displayName?.[0] || "U"}</AvatarFallback>
           </Avatar>
         </PopoverTrigger>
-        <PopoverContent className="w-60">
+        <PopoverContent className="w-60 flex items-start gap-3  flex-col">
           <div className="grid gap-4">
             <div className="space-y-2">
               <h4 className="font-medium leading-none">{user?.displayName}</h4>
               <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
           </div>
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="text-white"
+          >
+            Log out
+          </Button>
         </PopoverContent>
       </Popover>
-      <Button onClick={handleLogout} variant="outline" className="text-white">
-        Log out
-      </Button>
     </div>
   );
 }

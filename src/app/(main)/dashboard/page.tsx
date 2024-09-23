@@ -26,8 +26,10 @@ const projects = [
 export default function Dashboard() {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 dark:text-white">Your Projects</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <h1 className="text-2xl font-bold mb-6 dark:text-white mx-7">
+        Your Projects
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-7">
         {projects.map((project) => (
           <Card key={project.id}>
             <CardHeader>
