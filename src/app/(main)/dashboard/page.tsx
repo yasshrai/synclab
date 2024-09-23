@@ -1,43 +1,49 @@
-"use client";
-
-import { useEffect } from "react";
-import { auth } from "@/app/firebase/config";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { signOut } from "firebase/auth";
+
+// This would typically come from a database or API
+const projects = [
+  {
+    id: 1,
+    name: "Project Alpha",
+    description: "A cutting-edge web application",
+  },
+  { id: 2, name: "Project Beta", description: "Mobile app for productivity" },
+  {
+    id: 3,
+    name: "Project Gamma",
+    description: "AI-powered data analysis tool",
+  },
+];
 
 export default function Dashboard() {
-  const [user] = useAuthState(auth);
-  const router = useRouter();
-
-  useEffect(() => {
-    const userSession = sessionStorage.getItem("user");
-
-    if (!user && !userSession) {
-      router.push("/login");
-    }
-
-    if (user && !userSession) {
-      sessionStorage.setItem("user", JSON.stringify(user));
-    }
-  }, [user, router]);
-
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        sessionStorage.removeItem("user");
-        router.push("/login"); // Redirect to login after logout
-      })
-      .catch((error) => {
-        console.error("Error signing out: ", error);
-      });
-  };
-
   return (
-    <div className="dark:bg-zinc-950 bg-slate-200 min-h-screen flex items-center justify-center">
-      {" "}
-      <Button onClick={handleLogout}>Log out</Button>
+    <div>
+      <h1 className="text-2xl font-bold mb-6 dark:text-white">Your Projects</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project) => (
+          <Card key={project.id}>
+            <CardHeader>
+              <CardTitle>{project.name}</CardTitle>
+              <CardDescription>{project.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href={`/dashboard/project/${project.id}`}>
+                <Button variant="outline" className="w-full">
+                  View Project
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
