@@ -11,10 +11,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useEffect } from "react";
 
 export default function DashboardClient() {
   const router = useRouter();
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
 
   const handleLogout = () => {
     signOut(auth)
@@ -26,6 +34,10 @@ export default function DashboardClient() {
         console.error("Error signing out: ", error);
       });
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading state while checking auth
+  }
 
   return (
     <div className="flex items-center space-x-4">
