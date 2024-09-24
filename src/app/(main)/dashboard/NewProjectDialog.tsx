@@ -14,19 +14,59 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { auth } from "@/app/firebase/config";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useToast } from "@/hooks/use-toast";
+
+const db = getFirestore();
 
 export default function NewProjectDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
+  const [user] = useAuthState(auth);
+  const { toast } = useToast();
 
-  const handleCreateProject = () => {
-    // Here you would typically send the data to your backend
-    console.log("Creating project:", { projectName, projectDescription });
-    // Reset form and close dialog
-    setProjectName("");
-    setProjectDescription("");
-    setIsOpen(false);
+  const handleCreateProject = async () => {
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+
+    try {
+      const docRef = await addDoc(collection(db, "projects"), {
+        name: projectName,
+        description: projectDescription,
+        userId: user.uid,
+        createdAt: new Date(),
+      });
+      console.log("Project created with ID: ", docRef);
+      toast({
+        variant: "default",
+        className: "text-white font-bold bg-green-700",
+        title: "project Created Successfully " + "\n projectID:" + docRef.id,
+        duration: 2000,
+      });
+      setProjectName("");
+      setProjectDescription("");
+      setIsOpen(false);
+      location.reload();
+    } catch (error) {
+      let message = "";
+
+      if (error instanceof Error) {
+        message = error.message;
+      } else {
+        message = "Something went wrong";
+      }
+      toast({
+        variant: "default",
+        className: "text-white font-bold bg-red-700",
+        title: message,
+        duration: 2000,
+      });
+    }
   };
 
   return (
