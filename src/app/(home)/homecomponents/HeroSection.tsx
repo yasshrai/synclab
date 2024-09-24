@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Typewriter from "typewriter-effect";
 
 const HeroSection = () => {
   return (
@@ -14,7 +15,21 @@ const HeroSection = () => {
       >
         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl text-slate-900 dark:text-slate-100">
           Welcome to{" "}
-          <span className="text-blue-600 dark:text-blue-400">SyncLab</span>
+          <span className="text-blue-600 dark:text-blue-400">
+            <Typewriter
+              onInit={(typewriter) => {
+                typewriter
+                  .typeString("SyncLab")
+                  .pauseFor(2500)
+                  .deleteAll()
+                  .start();
+              }}
+              options={{
+                autoStart: true,
+                loop: true,
+              }}
+            ></Typewriter>
+          </span>
         </h1>
         <p className="max-w-[700px] text-slate-600 md:text-xl dark:text-slate-300">
           The ultimate app for managing your tasks and projects with ease and
