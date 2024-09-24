@@ -41,7 +41,6 @@ export default function NewProjectDialog() {
         userId: user.uid,
         createdAt: new Date(),
       });
-      console.log("Project created with ID: ", docRef);
       toast({
         variant: "default",
         className: "text-white font-bold bg-green-700",

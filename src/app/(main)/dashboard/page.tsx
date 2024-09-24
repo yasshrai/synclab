@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { auth } from "@/app/firebase/config"; // Adjust this import path as needed
+import { auth } from "@/app/firebase/config";
 import {
   getFirestore,
   collection,
@@ -44,13 +44,12 @@ export default function Dashboard() {
         );
         const querySnapshot = await getDocs(projectsQuery);
         const fetchedProjects: Project[] = querySnapshot.docs.map((doc) => ({
-          uid: doc.id,
+          uid: doc.data().userId,
           name: doc.data().name,
           description: doc.data().description,
         }));
         setProjects(fetchedProjects);
       } catch (err) {
-        console.error("Error fetching projects:", err);
         setError("Failed to load projects. Please try again later.");
       }
     }
