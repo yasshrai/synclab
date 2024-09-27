@@ -27,14 +27,17 @@ export default function Project({ params }: ProjectProps) {
       duration: 4000,
     });
   }
-  if (loading) {
-    <div>loading..</div>;
-  }
 
   return (
-    <div className="text-3xl text-white overflow-x-hidden ">
-      <p>User ID: {uid}</p>
-      <p>Project Name: {projectname}</p>
-    </div>
+    <>
+      {loading ? (
+        <div className="text-white text-2xl font-bold">loading..</div>
+      ) : (
+        <div className="text-3xl text-white overflow-x-hidden">
+          <p>User ID: {uid}</p>
+          <p>Project Name: {projectname}</p>
+        </div>
+      )}
+    </>
   );
 }
