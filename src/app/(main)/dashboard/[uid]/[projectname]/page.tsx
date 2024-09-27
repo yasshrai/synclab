@@ -11,7 +11,7 @@ export default function Project({ params }: ProjectProps) {
   const { uid, projectname } = params;
 
   return (
-    <div className="text-3xl text-white">
+    <div className="text-3xl text-white overflow-x-hidden ">
       <p>User ID: {uid}</p>
       <p>Project Name: {projectname}</p>
     </div>
