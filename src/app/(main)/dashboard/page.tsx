@@ -19,6 +19,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
+import DashboardSkeleton from "./DashboardSkeleton";
 
 const db = getFirestore();
 
@@ -29,14 +30,16 @@ interface Project {
 }
 
 export default function Dashboard() {
-  const [user, loading] = useAuthState(auth);
+  const [user, userLoading] = useAuthState(auth);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchProjects() {
       if (!user) return;
 
+      setProjectsLoading(true);
       try {
         const projectsQuery = query(
           collection(db, "projects"),
@@ -51,6 +54,8 @@ export default function Dashboard() {
         setProjects(fetchedProjects);
       } catch (err) {
         setError("Failed to load projects. Please try again later.");
+      } finally {
+        setProjectsLoading(false);
       }
     }
 
@@ -59,10 +64,8 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  if (loading) {
-    return (
-      <div className="text-center p-4 dark:text-white">Loading projects...</div>
-    );
+  if (userLoading || projectsLoading) {
+    return <DashboardSkeleton />;
   }
 
   if (!user) {
@@ -87,7 +90,9 @@ export default function Dashboard() {
         Your Projects
       </h1>
       {projects.length === 0 ? (
-        <p className="text-center dark:text-white"></p>
+        <p className="text-center dark:text-white font-bold">
+          No projects found. Create your first project to get started!
+        </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-7">
           {projects.map((project) => (
