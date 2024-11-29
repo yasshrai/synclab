@@ -75,7 +75,7 @@ export default function Project({ params }: ProjectProps) {
   const SidebarContents = () => (
     <>
       <SidebarHeader>
-        <h2 className="text-xl font-bold px-4 py-2">{projectname}</h2>
+        <h2 className="text-xl font-bold px-4 py-2 text-white">{projectname}</h2>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
@@ -84,8 +84,9 @@ export default function Project({ params }: ProjectProps) {
               <SidebarMenuButton
                 onClick={() => handleButtonClick(button.name)}
                 isActive={activeButton === button.name}
+                className=" text-white"
               >
-                <button.icon className="mr-3 h-5 w-5" />
+                <button.icon className="mr-3 h-5 w-5 text-white" />
                 {button.name}
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -107,17 +108,17 @@ export default function Project({ params }: ProjectProps) {
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="md:hidden fixed top-20 left-4 z-50">
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6 text-white" />
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-[240px] sm:w-[300px] bg-background border-r">
+          <SheetContent side="left" className="p-0 w-[240px] sm:w-[300px] bg-zinc-900  border-r">
             <SidebarContents />
           </SheetContent>
         </Sheet>
 
         <main className="flex-1 overflow-y-auto p-6 pt-16 md:pt-6">
-          <h1 className="text-3xl font-bold mb-6">Welcome to {projectname}</h1>
+          <h1 className="text-3xl font-bold mb-6 text-white">Welcome to {projectname}</h1>
           {activeButton && (
             <Card>
               <CardHeader>
