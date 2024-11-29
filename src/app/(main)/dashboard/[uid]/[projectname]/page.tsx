@@ -61,7 +61,6 @@ export default function Project({ params }: ProjectProps) {
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName)
     setIsMobileMenuOpen(false) // Close mobile menu after selection
-    console.log(`${buttonName} button clicked`)
   }
 
   const sidebarButtons = [
